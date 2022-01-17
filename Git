@@ -1,0 +1,62 @@
+git add .
+git commit -m "My Commit Message"
+
+This is same as -> git commit -am "My Commit Message 2.0"  
+
+
+git config --global alias.ac "commit -am"   // TO CREATE NEW ALIAS OF GIT COMMANDS
+
+
+// IF YOU WANT TO UPDATE LAST COMMIT MESSAGE
+git commit --amend -m "This message is now altered" 
+
+or 
+
+// IF YOU FORGOT TO ADD CERTAIN FILES IN A COMMIT (IF CODE IS NOT PUSHED TO REMOTE)
+git add .	
+git commit --amend --no-edit // In case you dont want to change commit message use --no-edit
+
+// IN CASE CODE IS ALREADY PUSHED TO REMOTE REPOSITORY, YOU CAN USE [BUT YOU WONT HAVE CO-WORKERS COMMITED CODE ON MASTER IN THAT CASE]
+git push origin master --force
+
+// IF YOU ACCIDENTLY POSTED A WRONG COMMIT (KIND OF UNDO/ BUT WONT REMOVE FROM GIT HISTORY)
+git revert pushpinderdev
+git log --oneline
+
+// WANT TO WORK ONLINE ON A REPO BUT HAVE NO SETUP NVM
+1. Open a github repository
+2. Press "." from keyboard
+3. This will open a live editor on web browser (VS CODE)
+4. You cant run terminal here, but if you want to setup github codespace in cloud for that.
+
+// IF YOU ARE WORKING ON SOMETHING AND IT IS UNDONE, IF YOU WANT TO REMOVE THOSE CHANGES FROM CURRENT COMMIT
+git stash
+
+// WHENEVER YOU ARE READY TO PUT THOSE CHANGES BACK IN A COMMIT USER
+git stash pop
+
+// IF YOU WANT TO DO MULTIPLE SUCH HALF FINISHED WORKS, USE
+git stash save firsttask
+git stash save secondtask
+
+// TO PUT THOSE CHANGES BACK AGAIN
+git stash list
+git stash apply 0 <--[Index of stash list which you want to apply]
+
+// HISTORY OF COMMITS
+git log
+git log --graph --oneline --decorate
+
+// TO CHECK THE PLACE FROM WHERE BUG STARTED TO BE ENTERED IN CODE
+git bisect start
+//JUST add "good" or "bad" before a commit as if any commit seems fine or not respectively, ex :
+git bisect bad
+git bisect good 6daf12d
+git bisect bad  
+
+
+// DESTRUCTION
+
+// CASE : YOU HAVE CODE FROM REMOTE ON LOCAL, VIZ NOT WORKING NOW AND YOU WANT TO RESTORE TO ORIGINAL STATE.
+git fetch origin 
+git reset --hard origin/master
