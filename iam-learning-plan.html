@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAM Mastery — 20-Hour Fast Track</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #0A0A0F;
+    color: #E8E8F0;
+    font-family: 'DM Mono', 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #0A0A0F; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+  /* HEADER */
+  #header {
+    padding: 28px 40px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(180deg, rgba(20,20,30,1) 0%, transparent 100%);
+    flex-shrink: 0;
+  }
+  #header-top { display: flex; align-items: baseline; gap: 16px; margin-bottom: 4px; }
+  #header-title { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+  #header-sub { font-size: 11px; color: #666; letter-spacing: 2px; text-transform: uppercase; }
+  #header-desc { font-size: 12px; color: #555; }
+
+  /* LAYOUT */
+  #layout { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+
+  /* SIDEBAR */
+  #sidebar {
+    width: 224px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar-label { font-size: 10px; color: #444; letter-spacing: 2px; margin-bottom: 10px; padding-left: 8px; }
+  .nav-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 9px 11px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    color: inherit;
+    font-family: inherit;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.05); }
+  .nav-btn.active { border-color: transparent; }
+  .nav-dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #666; font-weight: bold;
+    flex-shrink: 0;
+    transition: all 0.3s;
+    font-family: 'Syne', sans-serif;
+  }
+  .nav-dot.done { color: #000; font-size: 11px; }
+  .nav-text-title { font-size: 11px; color: #888; line-height: 1.3; }
+  .nav-btn.active .nav-text-title { color: #fff; font-weight: 500; }
+  .nav-text-dur { font-size: 10px; color: #444; margin-top: 2px; }
+
+  /* PROGRESS BOX */
+  #progress-box {
+    margin-top: 20px;
+    padding: 14px 12px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  #progress-label { font-size: 10px; color: #444; letter-spacing: 1px; margin-bottom: 6px; }
+  #progress-count { font-size: 22px; font-family: 'Syne', sans-serif; font-weight: 800; color: #fff; }
+  #progress-count span { font-size: 14px; color: #444; font-weight: 400; }
+  #progress-bar-bg { margin-top: 8px; height: 3px; background: #1a1a2e; border-radius: 2px; }
+  #progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #7B61FF, #00D4FF); border-radius: 2px; transition: width 0.4s ease; }
+  #progress-hours { font-size: 10px; color: #555; margin-top: 5px; }
+
+  /* MAIN */
+  #main { flex: 1; overflow-y: auto; padding: 32px 40px 48px; }
+
+  /* SESSION HEADER */
+  #session-header { margin-bottom: 28px; }
+  #session-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  #session-num-circle {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600;
+    font-family: 'Syne', sans-serif;
+    flex-shrink: 0;
+  }
+  #session-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+  #session-subtitle { font-size: 12px; color: #666; margin-top: 2px; }
+  #mark-done-btn {
+    margin-left: auto;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  /* INSIGHT BOX */
+  #insight-box {
+    padding: 14px 18px;
+    border-radius: 8px;
+    border-left-width: 3px;
+    border-left-style: solid;
+    margin-bottom: 12px;
+  }
+  #insight-label { font-size: 10px; letter-spacing: 2px; margin-bottom: 5px; }
+  #insight-text { font-size: 13px; color: #ccc; line-height: 1.6; font-style: italic; }
+  #why-text { font-size: 12px; color: #666; line-height: 1.7; padding: 0 4px; }
+  #why-text span { color: #555; letter-spacing: 1px; font-size: 10px; }
+
+  /* SCHEDULE */
+  #schedule-label { font-size: 10px; color: #444; letter-spacing: 2px; margin-bottom: 14px; margin-top: 26px; }
+  #blocks-list { display: flex; flex-direction: column; gap: 10px; }
+  .block-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 15px 18px;
+    transition: all 0.2s;
+    display: grid;
+    grid-template-columns: 80px 110px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .block-card:hover { border-color: rgba(255,255,255,0.14); transform: translateX(2px); }
+  .block-time { font-size: 11px; color: #555; padding-top: 2px; }
+  .block-type-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    border-width: 1px;
+    border-style: solid;
+  }
+  .block-activity { font-size: 12px; color: #aaa; margin-top: 6px; font-weight: 500; }
+  .block-detail { font-size: 12px; color: #777; line-height: 1.7; margin-bottom: 8px; }
+  .block-link {
+    display: inline-block;
+    margin-right: 7px;
+    margin-bottom: 4px;
+    font-size: 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    padding: 2px 7px;
+    letter-spacing: 0.3px;
+    border-width: 1px;
+    border-style: solid;
+    transition: opacity 0.15s;
+  }
+  .block-link:hover { opacity: 0.7; }
+
+  /* REVIEW SECTION */
+  #review-section { margin-top: 28px; }
+  #review-toggle {
+    width: 100%;
+    padding: 15px 18px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    color: #aaa;
+    transition: all 0.2s;
+  }
+  #review-toggle:hover { background: rgba(255,255,255,0.04); }
+  #review-toggle-left { display: flex; align-items: center; gap: 12px; }
+  #review-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,181,71,0.1);
+    border: 1px solid rgba(255,181,71,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  #review-toggle-title { font-size: 12px; color: #ccc; font-weight: 500; }
+  #review-toggle-sub { font-size: 11px; color: #555; margin-top: 2px; }
+  #review-chevron { font-size: 14px; color: #555; }
+  #review-body {
+    margin-top: 8px;
+    padding: 18px 22px;
+    background: rgba(255,181,71,0.04);
+    border: 1px solid rgba(255,181,71,0.12);
+    border-radius: 10px;
+    display: none;
+  }
+  #review-body.open { display: block; }
+  #review-body-label { font-size: 10px; color: #FFB547; letter-spacing: 2px; margin-bottom: 14px; }
+  .review-item { border-left-width: 2px; border-left-style: solid; padding-left: 12px; margin-bottom: 10px; }
+  .review-q-num { font-size: 11px; color: #666; margin-bottom: 2px; }
+  .review-q-text { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #review-tip {
+    margin-top: 18px;
+    padding: 11px 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.7;
+  }
+  #review-tip strong { color: #666; }
+
+  /* NAVIGATION */
+  #nav-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-footer-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    color: #777;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    transition: all 0.2s;
+  }
+  .nav-footer-btn:disabled { color: #333; cursor: not-allowed; }
+  .nav-footer-btn:not(:disabled):hover { background: rgba(255,255,255,0.05); }
+  #btn-next { /* color and border set dynamically */ }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="header-top">
+    <span id="header-title">IAM MASTERY</span>
+    <span id="header-sub">20-Hour Fast Track / Enterprise Identity</span>
+  </div>
+  <div id="header-desc">The 20% that drives 80% of results — for complete beginners</div>
+</div>
+
+<div id="layout">
+  <div id="sidebar">
+    <div class="sidebar-label">SESSIONS</div>
+    <!-- nav buttons injected by JS -->
+    <div id="progress-box">
+      <div id="progress-label">PROGRESS</div>
+      <div id="progress-count">0<span>/10</span></div>
+      <div id="progress-bar-bg"><div id="progress-bar-fill"></div></div>
+      <div id="progress-hours">0h / 20h</div>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="session-header">
+      <div id="session-title-row">
+        <div id="session-num-circle"></div>
+        <div>
+          <div id="session-title"></div>
+          <div id="session-subtitle"></div>
+        </div>
+        <button id="mark-done-btn" onclick="toggleDone()"></button>
+      </div>
+      <div id="insight-box">
+        <div id="insight-label"></div>
+        <div id="insight-text"></div>
+      </div>
+      <div id="why-text"></div>
+    </div>
+
+    <div id="schedule-label">SCHEDULE</div>
+    <div id="blocks-list"></div>
+
+    <div id="review-section">
+      <button id="review-toggle" onclick="toggleReview()">
+        <div id="review-toggle-left">
+          <div id="review-icon">⏱</div>
+          <div>
+            <div id="review-toggle-title">15-Minute Review</div>
+            <div id="review-toggle-sub">Answer these before moving on</div>
+          </div>
+        </div>
+        <span id="review-chevron">▼</span>
+      </button>
+      <div id="review-body">
+        <div id="review-body-label">REVIEW QUESTIONS — ANSWER OUT LOUD OR IN WRITING</div>
+        <div id="review-questions"></div>
+        <div id="review-tip"></div>
+      </div>
+    </div>
+
+    <div id="nav-footer">
+      <button class="nav-footer-btn" id="btn-prev" onclick="navigate(-1)">← Previous Session</button>
+      <button class="nav-footer-btn" id="btn-next" onclick="navigate(1)">Next Session →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const sessions = [
+  {
+    number: 1, title: "The Identity Foundation", subtitle: "Why IAM exists & core concepts", duration: "2 hours", color: "#00D4FF",
+    keyInsight: "IAM is about answering two questions: Who are you? What can you do?",
+    why: "You can't learn IAM without understanding its vocabulary. 80% of confusion comes from misusing 5 core terms.",
+    blocks: [
+      { time: "0:00–0:30", activity: "Conceptual Read", detail: "Authentication vs. Authorization vs. Identity — understand the core triad.", type: "read",
+        links: [{ label: "Microsoft: What is IAM?", url: "https://www.microsoft.com/en-us/security/business/security-101/what-is-identity-access-management-iam" }, { label: "Okta: IAM Overview", url: "https://www.okta.com/identity-101/iam/" }] },
+      { time: "0:30–1:00", activity: "Core Vocabulary", detail: "Learn: Identity Provider (IdP), Service Provider (SP), Principal, Directory, Federation, Single Sign-On. Write your own definitions — don't copy.", type: "study",
+        links: [{ label: "Cloudflare: IAM Glossary", url: "https://www.cloudflare.com/learning/access-management/what-is-identity-and-access-management/" }] },
+      { time: "1:00–1:30", activity: "Real-World Mapping", detail: "Watch John Savill's Entra ID / Azure AD fundamentals playlist. Map concepts to companies you know: Google = IdP, your work laptop login = authentication.", type: "watch",
+        links: [{ label: "▶ John Savill: Entra ID Videos (YouTube playlist)", url: "https://youtube.com/playlist?list=PLlVtbbG169nHz2qfLvPsAz9CnnXofhmcA" }, { label: "▶ SC-900 Identity Fundamentals Cram (45 min)", url: "https://youtu.be/Bz-8jM3jg-8" }] },
+      { time: "1:30–2:00", activity: "Hands-On", detail: "Create a free Okta Developer account. Explore the dashboard without doing anything — just observe what's there.", type: "practice",
+        links: [{ label: "Sign up: Okta Developer Account", url: "https://developer.okta.com/signup/" }] }
+    ],
+    review: ["Define: authentication, authorization, IdP, SP, federation, SSO — in your own words", "What's the difference between an identity and a credential?", "Name 3 real-world IdPs you encounter daily"]
+  },
+  {
+    number: 2, title: "Directory Services", subtitle: "Where identities live — AD, LDAP & Azure AD", duration: "2 hours", color: "#7B61FF",
+    keyInsight: "Active Directory is the backbone of 90% of enterprise IAM. Everything else connects to it.",
+    why: "Most enterprise IAM is built around Microsoft AD or its cloud successor Azure AD (Entra ID). Understanding directories unlocks everything else.",
+    blocks: [
+      { time: "0:00–0:45", activity: "Conceptual Read", detail: "Read 'Active Directory explained' (Microsoft Docs). Understand: domains, forests, OUs, group policy. Focus on the mental model, not the technical setup.", type: "read",
+        links: [{ label: "Microsoft Docs: Active Directory overview", url: "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview" }, { label: "Microsoft Docs: What is Microsoft Entra ID?", url: "https://learn.microsoft.com/en-us/entra/fundamentals/whatis" }] },
+      { time: "0:45–1:15", activity: "Azure AD / Entra ID", detail: "Watch the Azure AD basics video by Adam Marczak (AZ-900 Episode 25, ~20 min). Note how cloud AD differs from on-premise. Hybrid = both connected.", type: "watch",
+        links: [{ label: "▶ Adam Marczak: Azure Identity Services (YouTube)", url: "https://youtu.be/Ma7VAQE7ga4" }, { label: "▶ John Savill: Entra ID Deep Dive playlist", url: "https://youtube.com/playlist?list=PLlVtbbG169nHz2qfLvPsAz9CnnXofhmcA" }] },
+      { time: "1:15–1:45", activity: "LDAP Basics", detail: "Read a lightweight LDAP explainer. Understand it's a protocol, not a product — it's how apps talk to directories. You don't need to configure it, just recognize it.", type: "read",
+        links: [{ label: "Okta: What is LDAP?", url: "https://www.okta.com/identity-101/what-is-ldap/" }] },
+      { time: "1:45–2:00", activity: "Hands-On", detail: "In your Okta dev account: navigate to Directory → People. Add a test user. Notice the fields — they mirror AD attributes (first name, email, department, manager).", type: "practice",
+        links: [{ label: "Okta Docs: Add users", url: "https://help.okta.com/en-us/content/topics/users-groups-profiles/usgp-add-users.htm" }] }
+    ],
+    review: ["What is Active Directory and why do enterprises use it?", "What's the difference between on-premise AD and Azure AD?", "What does LDAP do and when would you encounter it?"]
+  },
+  {
+    number: 3, title: "Authentication Protocols", subtitle: "SAML, OAuth 2.0 & OIDC — the holy trinity", duration: "2 hours", color: "#FF6B6B",
+    keyInsight: "SAML = enterprise SSO. OAuth = app permissions. OIDC = login with Google. Know which to use when.",
+    why: "These 3 protocols power virtually every enterprise authentication flow. Knowing them puts you ahead of 90% of beginners.",
+    blocks: [
+      { time: "0:00–0:40", activity: "SAML Deep Dive", detail: "Read Okta's 'What is SAML?' guide. Understand SP-initiated vs IdP-initiated flows. Draw the flow on paper: User → SP → IdP → SAML Assertion → SP → Access.", type: "read",
+        links: [{ label: "Okta: What is SAML?", url: "https://www.okta.com/blog/2020/09/what-is-saml/" }, { label: "Cloudflare: How SAML works", url: "https://www.cloudflare.com/learning/access-management/what-is-saml/" }] },
+      { time: "0:40–1:10", activity: "OAuth 2.0 & OIDC", detail: "Watch Okta's illustrated guide video (16 min) — the single best beginner explainer for OAuth and OIDC. OIDC = OAuth + identity layer.", type: "watch",
+        links: [{ label: "▶ Okta Dev: Illustrated Guide to OAuth & OIDC (YouTube)", url: "https://www.youtube.com/watch?v=t18YB3xDfXI" }, { label: "Okta Dev Blog: Illustrated Guide (with diagrams)", url: "https://developer.okta.com/blog/2019/10/21/illustrated-guide-to-oauth-and-oidc" }] },
+      { time: "1:10–1:40", activity: "Protocol Comparison", detail: "Build a comparison table: SAML vs OAuth vs OIDC — use case, token type, format (XML vs JSON), who uses it. This will be your reference document.", type: "study",
+        links: [{ label: "Okta: OAuth vs SAML vs OIDC", url: "https://www.okta.com/identity-101/saml-vs-oauth/" }] },
+      { time: "1:40–2:00", activity: "Hands-On", detail: "In Okta: Applications → Create App Integration. Try creating a SAML app and an OIDC app. Don't complete — just see the different fields each protocol requires.", type: "practice",
+        links: [{ label: "Okta Docs: Create app integrations", url: "https://help.okta.com/en-us/content/topics/apps/apps_app_integration_wizard.htm" }] }
+    ],
+    review: ["Explain SAML flow in plain English to an imaginary 10-year-old", "When would you use OAuth vs SAML?", "What does OIDC add on top of OAuth 2.0?"]
+  },
+  {
+    number: 4, title: "Single Sign-On in Practice", subtitle: "Configuring & troubleshooting SSO", duration: "2 hours", color: "#00C48C",
+    keyInsight: "SSO is IAM's biggest visible win. When it breaks, you need to know exactly where in the flow to look.",
+    why: "SSO configuration is the #1 hands-on skill employers ask about. Building one yourself cements all the protocol knowledge from Session 3.",
+    blocks: [
+      { time: "0:00–0:30", activity: "SSO Architecture", detail: "Read 'How SSO Works' on Cloudflare's learning hub. Understand session tokens, cookie domains, and why SSO breaks across subdomains.", type: "read",
+        links: [{ label: "Cloudflare: How does SSO work?", url: "https://www.cloudflare.com/learning/access-management/what-is-sso/" }, { label: "Okta: What is SSO?", url: "https://www.okta.com/blog/2021/02/single-sign-on/" }] },
+      { time: "0:30–1:15", activity: "Hands-On: Build SSO", detail: "In Okta Dev: Add an app from the Okta Integration Network (OIN). Configure SAML SSO. Install the SAML Tracer Chrome extension to capture and inspect the SAML assertion.", type: "practice",
+        links: [{ label: "Okta Integration Network (OIN)", url: "https://www.okta.com/okta-integration-network/" }, { label: "Chrome: SAML Tracer extension", url: "https://chromewebstore.google.com/detail/saml-tracer/mpdajninpobndbfcldcmbpnnaipmjhol" }] },
+      { time: "1:15–1:45", activity: "Troubleshooting Patterns", detail: "Study the 5 most common SSO errors: certificate mismatch, clock skew, wrong ACS URL, missing attributes, incorrect entity ID. Bookmark Okta's troubleshooting guide.", type: "study",
+        links: [{ label: "Okta: Troubleshoot SAML SSO", url: "https://help.okta.com/en-us/content/topics/apps/apps_troubleshoot_saml_2_sp.htm" }] },
+      { time: "1:45–2:00", activity: "Azure SSO", detail: "Watch the first 15 min of Microsoft's tutorial on configuring SAML SSO in Entra ID. See how the same concepts apply in a different platform.", type: "watch",
+        links: [{ label: "▶ Microsoft Learn: Configure SAML SSO (video)", url: "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/add-application-portal-setup-sso" }, { label: "Microsoft Docs: SAML SSO in Entra ID", url: "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/what-is-single-sign-on" }] }
+    ],
+    review: ["Walk through a complete SAML SSO flow from memory", "What are the 3 most common causes of SSO failures?", "What is the ACS URL and where does it come from?"]
+  },
+  {
+    number: 5, title: "Multi-Factor Authentication", subtitle: "MFA factors, policies & UX tradeoffs", duration: "2 hours", color: "#FFB547",
+    keyInsight: "MFA stops 99.9% of account takeovers. The battle is making it frictionless enough that users don't bypass it.",
+    why: "MFA is now mandatory in every serious enterprise environment. Understanding factor types and adaptive policies is essential for any IAM role.",
+    blocks: [
+      { time: "0:00–0:30", activity: "Factor Types", detail: "Study the factor categories: Something you know (password), have (TOTP app, hardware key), are (biometrics). Read the NIST digital identity guidelines summary.", type: "read",
+        links: [{ label: "NIST SP 800-63B: Digital Identity Guidelines", url: "https://pages.nist.gov/800-63-3/sp800-63b.html" }, { label: "Okta: MFA explained", url: "https://www.okta.com/blog/2019/10/what-is-multi-factor-authentication/" }] },
+      { time: "0:30–1:00", activity: "MFA Technologies", detail: "Compare: SMS OTP (weak, why?), TOTP (Google Authenticator), Push notification (Okta Verify/Duo), FIDO2/WebAuthn (strongest). Read the Okta MFA factor comparison.", type: "study",
+        links: [{ label: "Okta: Compare MFA methods", url: "https://www.okta.com/resources/whitepaper/factors-of-authentication/" }, { label: "FIDO Alliance: What is FIDO2?", url: "https://fidoalliance.org/fido2/" }] },
+      { time: "1:00–1:30", activity: "Adaptive MFA", detail: "Learn risk-based authentication: step-up auth, context signals (IP, device, location, time). Read Okta's adaptive MFA explainer. This is where AI is entering IAM.", type: "read",
+        links: [{ label: "Okta: What is Adaptive MFA?", url: "https://www.okta.com/blog/2019/11/adaptive-multi-factor-authentication-mfa/" }] },
+      { time: "1:30–2:00", activity: "Hands-On", detail: "In Okta Dev: Security → Authenticators. Enable TOTP. Create an Authentication Policy. Apply it to your test user. Try the enrollment flow yourself.", type: "practice",
+        links: [{ label: "Okta Docs: Configure Authenticators", url: "https://help.okta.com/en-us/content/topics/security/authenticators/authenticators-overview.htm" }] }
+    ],
+    review: ["Rank the MFA factors from weakest to strongest and explain why", "What is adaptive MFA and what signals does it use?", "Why is SMS OTP considered a weak factor?"]
+  },
+  {
+    number: 6, title: "Access Management & Authorization", subtitle: "RBAC, ABAC & Least Privilege", duration: "2 hours", color: "#FF61A6",
+    keyInsight: "Most breaches happen because someone had too much access. Least privilege is not a concept — it's a discipline.",
+    why: "Authorization models are where IAM gets strategic. RBAC vs ABAC decisions affect thousands of users and drive major security architecture choices.",
+    blocks: [
+      { time: "0:00–0:35", activity: "RBAC Deep Dive", detail: "Read 'What is RBAC?' (Okta). Understand: roles, permissions, role assignment, role hierarchy. Key insight: roles are collections of permissions, not job titles.", type: "read",
+        links: [{ label: "Okta: What is RBAC?", url: "https://www.okta.com/blog/2019/11/role-based-access-control-vs-attribute-based-access-control/" }, { label: "NIST: RBAC overview", url: "https://csrc.nist.gov/projects/role-based-access-control" }] },
+      { time: "0:35–1:05", activity: "ABAC & Policy-Based", detail: "Read 'RBAC vs ABAC' (Okta). ABAC uses attributes (department=Finance AND clearance=High) for finer control. Learn when each model is appropriate.", type: "read",
+        links: [{ label: "Okta: RBAC vs ABAC", url: "https://www.okta.com/blog/2020/09/attribute-based-access-control-abac/" }] },
+      { time: "1:05–1:30", activity: "Least Privilege & Zero Trust", detail: "Watch the Microsoft Mechanics Zero Trust Essentials episode on Identity & Access (~14 min). Understand JIT access and why standing access is risky.", type: "watch",
+        links: [{ label: "▶ Microsoft Mechanics: Zero Trust — Identity & Access (YouTube)", url: "https://www.youtube.com/watch?v=tBRgMFKS4cU" }, { label: "Microsoft: Zero Trust principles explained", url: "https://learn.microsoft.com/en-us/security/zero-trust/index-with-videos" }] },
+      { time: "1:30–2:00", activity: "Hands-On", detail: "In Okta: Directory → Groups. Create 3 groups (Finance, Engineering, HR). Assign different app access to each. Assign your test user to Finance and observe what they can access.", type: "practice",
+        links: [{ label: "Okta Docs: Manage Groups", url: "https://help.okta.com/en-us/content/topics/users-groups-profiles/usgp-about-groups.htm" }] }
+    ],
+    review: ["Explain RBAC vs ABAC with a concrete example for each", "What is Least Privilege and why does it matter for security?", "What is Zero Trust and how does it relate to IAM?"]
+  },
+  {
+    number: 7, title: "Lifecycle Management", subtitle: "Provisioning, deprovisioning & SCIM", duration: "2 hours", color: "#4ECDC4",
+    keyInsight: "The most common audit finding is ex-employees who still have access. Automated lifecycle management eliminates this.",
+    why: "User lifecycle (joiners, movers, leavers) is the operational core of IAM. SCIM is the protocol that automates it — knowing it is highly practical.",
+    blocks: [
+      { time: "0:00–0:30", activity: "Lifecycle Concepts", detail: "Study the Joiner-Mover-Leaver model. Understand: automated provisioning, role-based provisioning, deprovisioning.", type: "read",
+        links: [{ label: "Microsoft Docs: Identity Lifecycle Management", url: "https://learn.microsoft.com/en-us/entra/id-governance/what-is-identity-lifecycle-management" }, { label: "Okta: User lifecycle management", url: "https://www.okta.com/blog/2021/08/user-lifecycle-management/" }] },
+      { time: "0:30–1:00", activity: "SCIM Protocol", detail: "Read 'What is SCIM?' (Okta). SCIM = System for Cross-domain Identity Management. It's the API standard for syncing users between an IdP and apps.", type: "read",
+        links: [{ label: "Okta: What is SCIM?", url: "https://www.okta.com/blog/2017/01/what-is-scim/" }, { label: "SCIM spec overview", url: "http://www.simplecloud.info/" }] },
+      { time: "1:00–1:30", activity: "HR System Integration", detail: "Watch the Okta + Workday provisioning overview (~15 min). Understand why the HR system = source of truth. Then explore Okta Workflows for no-code automation.", type: "watch",
+        links: [{ label: "▶ Okta: Workday to Okta provisioning demo (YouTube)", url: "https://www.youtube.com/watch?v=x5hc2g9RYRA" }, { label: "Okta Workflows overview", url: "https://www.okta.com/platform/workflows/" }] },
+      { time: "1:30–2:00", activity: "Hands-On", detail: "In Okta: Enable provisioning for an app (try Slack from OIN). Configure create/update/deactivate actions. See how SCIM attributes map between Okta and the app.", type: "practice",
+        links: [{ label: "Okta Docs: Configure provisioning for an app", url: "https://help.okta.com/en-us/content/topics/apps/apps_mismatch.htm" }] }
+    ],
+    review: ["What happens to an employee's access when they leave? Walk through the ideal automated flow.", "What is SCIM and why was it created?", "Why is the HR system considered the 'source of truth' in IAM?"]
+  },
+  {
+    number: 8, title: "Privileged Access Management", subtitle: "PAM, service accounts & secrets", duration: "2 hours", color: "#FF8C42",
+    keyInsight: "Privileged accounts are the crown jewels. Every major breach involves compromised admin credentials.",
+    why: "PAM is one of the highest-demand IAM specializations. Even basic PAM knowledge separates you from 80% of candidates.",
+    blocks: [
+      { time: "0:00–0:35", activity: "PAM Concepts", detail: "Read CyberArk's PAM overview (the market leader). Understand: privileged accounts, shared accounts, service accounts, emergency 'break-glass' accounts.", type: "read",
+        links: [{ label: "CyberArk: What is PAM?", url: "https://www.cyberark.com/what-is/privileged-access-management/" }, { label: "Gartner: PAM definition", url: "https://www.gartner.com/en/information-technology/glossary/privileged-access-management" }] },
+      { time: "0:35–1:05", activity: "PAM Capabilities", detail: "Study the PAM feature set: password vaulting, session recording, just-in-time access, credential rotation. Compare CyberArk, BeyondTrust, and Delinea (the top 3 vendors).", type: "study",
+        links: [{ label: "BeyondTrust: PAM features overview", url: "https://www.beyondtrust.com/resources/glossary/privileged-access-management-pam" }, { label: "Delinea: PAM solutions", url: "https://delinea.com/what-is/privileged-access-management" }] },
+      { time: "1:05–1:35", activity: "Secrets Management", detail: "Read HashiCorp Vault's intro page. Understand: API keys, certificates, database credentials. Learn why hardcoded secrets in code = catastrophic risk.", type: "read",
+        links: [{ label: "HashiCorp: What is secrets management?", url: "https://www.hashicorp.com/resources/what-is-secrets-management" }, { label: "HashiCorp Vault overview", url: "https://www.vaultproject.io/" }] },
+      { time: "1:35–2:00", activity: "Case Study", detail: "Read the high-level SolarWinds breach summary. Identify where IAM failures (over-privileged service accounts) contributed. Write 5 bullet points on what IAM controls could have prevented it.", type: "study",
+        links: [{ label: "CISA: SolarWinds breach overview", url: "https://www.cisa.gov/news-events/news/joint-statement-federal-bureau-investigation-fbi-cybersecurity-and-infrastructure-security" }, { label: "CrowdStrike: SolarWinds explained", url: "https://www.crowdstrike.com/cybersecurity-101/cyberattacks/solarwinds-hack-explained/" }] }
+    ],
+    review: ["What makes a 'privileged' account different from a regular user account?", "Name 4 PAM capabilities and what problem each solves", "What is a service account and why are they risky?"]
+  },
+  {
+    number: 9, title: "Governance, Compliance & Auditing", subtitle: "IGA, access reviews & regulatory requirements", duration: "2 hours", color: "#A8E6CF",
+    keyInsight: "IAM governance is what keeps companies out of regulatory trouble. Someone has to own this — it could be you.",
+    why: "IGA (Identity Governance & Administration) is the compliance arm of IAM. SOX, HIPAA, and SOC 2 all have IAM requirements. This is where IAM becomes business-critical.",
+    blocks: [
+      { time: "0:00–0:35", activity: "IGA Overview", detail: "Read SailPoint's IGA explainer (the market leader in IGA). IGA = visibility + policy + access reviews. Understand: role mining, separation of duties (SoD), access certifications.", type: "read",
+        links: [{ label: "SailPoint: What is IGA?", url: "https://www.sailpoint.com/identity-library/what-is-identity-governance/" }, { label: "Okta: Identity Governance overview", url: "https://www.okta.com/blog/2022/04/identity-governance/" }] },
+      { time: "0:35–1:05", activity: "Compliance Frameworks", detail: "Study how IAM intersects with: SOX, HIPAA, SOC 2, and GDPR. The common thread: least privilege + audit logs.", type: "study",
+        links: [{ label: "Okta: IAM and compliance", url: "https://www.okta.com/blog/2021/04/identity-and-access-management-compliance/" }, { label: "Microsoft: Compliance overview", url: "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home" }] },
+      { time: "1:05–1:35", activity: "Access Reviews & Certifications", detail: "Understand access certification campaigns. Watch the Okta Identity Governance demo to see what an access review looks like in practice.", type: "watch",
+        links: [{ label: "▶ Okta: Identity Governance demo (YouTube)", url: "https://www.youtube.com/watch?v=Y8BHWN3LmIc" }, { label: "Okta Docs: Access certifications", url: "https://help.okta.com/en-us/content/topics/identity-governance/iga-certifications.htm" }] },
+      { time: "1:35–2:00", activity: "Audit Logs", detail: "In Okta: Reports → System Log. Filter by event type. Find a login event and read the full JSON. Understand what makes a good audit trail for a compliance audit.", type: "practice",
+        links: [{ label: "Okta Docs: System Log", url: "https://help.okta.com/en-us/content/topics/reports/reports_system_log.htm" }] }
+    ],
+    review: ["What is the difference between IAM and IGA?", "What is Separation of Duties and give a concrete example", "Why would an auditor care about your IAM system?"]
+  },
+  {
+    number: 10, title: "Putting It All Together", subtitle: "Architecture, career paths & your next 30 days", duration: "2 hours", color: "#C9B1FF",
+    keyInsight: "IAM is a system, not a feature. Your job is to design it so it's invisible when it works and fast to fix when it breaks.",
+    why: "Synthesizing everything into architecture thinking and career direction is how you turn 20 hours of learning into professional leverage.",
+    blocks: [
+      { time: "0:00–0:30", activity: "IAM Architecture Patterns", detail: "Read Okta's modern IAM architecture whitepaper. Understand: hub-and-spoke IdP model, hybrid identity, cloud-first vs legacy. Draw your own reference architecture.", type: "read",
+        links: [{ label: "Okta: Modern IAM Architecture guide", url: "https://www.okta.com/resources/whitepaper/modern-iam-architecture/" }, { label: "Microsoft: Identity architecture overview", url: "https://learn.microsoft.com/en-us/azure/architecture/guide/security/security-start-here" }] },
+      { time: "0:30–1:00", activity: "Vendor Landscape", detail: "Study the IAM vendor map: Okta, Microsoft Entra, Ping Identity, SailPoint (IGA), CyberArk (PAM), ForgeRock. Read Gartner's Access Management Magic Quadrant summary.", type: "study",
+        links: [{ label: "Gartner: Access Management MQ (summary)", url: "https://www.gartner.com/en/documents/4010623" }, { label: "KuppingerCole: IAM market overview", url: "https://www.kuppingercole.com/research/lc80457/access-management" }] },
+      { time: "1:00–1:30", activity: "Career Paths & Certifications", detail: "Research and pick your next certification: Okta Certified Professional, Microsoft SC-300, or SailPoint IdentityNow. Each has a free study guide.", type: "study",
+        links: [{ label: "Okta Certified Professional exam guide", url: "https://www.okta.com/training/okta-certified-professional-exam/" }, { label: "Microsoft SC-300: Identity & Access Admin", url: "https://learn.microsoft.com/en-us/credentials/certifications/identity-and-access-administrator/" }, { label: "▶ John Savill: SC-300 Study Playlist (YouTube)", url: "https://youtube.com/playlist?list=PLlVtbbG169nGj4rfaMUQiKiBZNDlxoo0y" }] },
+      { time: "1:30–2:00", activity: "Final Project", detail: "Design an IAM architecture for a 500-person company moving to the cloud. Document: IdP choice, SSO strategy, MFA policy, provisioning approach, PAM plan, governance model. One page. This is your portfolio piece.", type: "practice",
+        links: [{ label: "Okta reference architecture", url: "https://developer.okta.com/docs/concepts/okta-architecture/" }] }
+    ],
+    review: ["Explain the IAM architecture you designed and why you made each choice", "Which certification will you pursue first and why?", "What's the one IAM concept you still feel least confident about? (Go back to that session this week.)"]
+  }
+];
+
+const typeConfig = {
+  read:     { label: "Read",     color: "#00D4FF", bg: "rgba(0,212,255,0.1)" },
+  watch:    { label: "Watch",    color: "#FF6B6B", bg: "rgba(255,107,107,0.1)" },
+  study:    { label: "Study",    color: "#FFB547", bg: "rgba(255,181,71,0.1)" },
+  practice: { label: "Hands-On", color: "#00C48C", bg: "rgba(0,196,140,0.1)" }
+};
+
+let activeSession = 0;
+let completedSessions = new Set();
+let reviewOpen = false;
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+function buildSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  // remove old nav buttons
+  sidebar.querySelectorAll('.nav-btn').forEach(b => b.remove());
+  const insertBefore = document.getElementById('progress-box');
+
+  sessions.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-btn' + (i === activeSession ? ' active' : '');
+    btn.id = `nav-btn-${i}`;
+    btn.onclick = () => { activeSession = i; reviewOpen = false; render(); };
+    if (i === activeSession) {
+      btn.style.background = `rgba(${hexToRgb(s.color)},0.1)`;
+      btn.style.borderColor = s.color + '30';
+    }
+    const done = completedSessions.has(s.number);
+    btn.innerHTML = `
+      <div class="nav-dot${done ? ' done' : ''}" style="border-color:${done ? s.color : '#333'};background:${done ? s.color : 'transparent'};color:${done ? '#000' : '#666'}">
+        ${done ? '✓' : s.number}
+      </div>
+      <div>
+        <div class="nav-text-title">${s.title}</div>
+        <div class="nav-text-dur">${s.duration}</div>
+      </div>`;
+    sidebar.insertBefore(btn, insertBefore);
+  });
+}
+
+function updateProgress() {
+  const c = completedSessions.size;
+  document.getElementById('progress-count').innerHTML = `${c}<span>/10</span>`;
+  document.getElementById('progress-bar-fill').style.width = `${c * 10}%`;
+  document.getElementById('progress-hours').textContent = `${c * 2}h / 20h`;
+}
+
+function renderSession() {
+  const s = sessions[activeSession];
+  const done = completedSessions.has(s.number);
+
+  // Title row
+  const circle = document.getElementById('session-num-circle');
+  circle.textContent = s.number;
+  circle.style.background = s.color + '20';
+  circle.style.border = `2px solid ${s.color}60`;
+  circle.style.color = s.color;
+
+  document.getElementById('session-title').textContent = s.title;
+  document.getElementById('session-subtitle').textContent = `${s.subtitle} · ${s.duration}`;
+
+  const btn = document.getElementById('mark-done-btn');
+  btn.textContent = done ? '✓ COMPLETED' : 'MARK DONE';
+  btn.style.background = done ? s.color + '20' : 'transparent';
+  btn.style.border = `1px solid ${done ? s.color : '#333'}`;
+  btn.style.color = done ? s.color : '#555';
+
+  // Insight
+  const ib = document.getElementById('insight-box');
+  ib.style.background = s.color + '08';
+  ib.style.borderColor = s.color;
+  ib.style.borderLeftColor = s.color;
+  ib.style.border = `1px solid ${s.color}25`;
+  ib.style.borderLeft = `3px solid ${s.color}`;
+  document.getElementById('insight-label').style.color = s.color;
+  document.getElementById('insight-label').textContent = 'KEY INSIGHT';
+  document.getElementById('insight-text').textContent = `"${s.keyInsight}"`;
+
+  document.getElementById('why-text').innerHTML = `<span>WHY THIS MATTERS: </span>${s.why}`;
+
+  // Blocks
+  const list = document.getElementById('blocks-list');
+  list.innerHTML = '';
+  s.blocks.forEach(block => {
+    const tc = typeConfig[block.type];
+    const linksHtml = (block.links || []).map(l =>
+      `<a class="block-link" href="${l.url}" target="_blank" rel="noopener noreferrer"
+        style="color:${tc.color};background:${tc.bg};border-color:${tc.color}30">${l.label} ↗</a>`
+    ).join('');
+    const card = document.createElement('div');
+    card.className = 'block-card';
+    card.innerHTML = `
+      <div class="block-time">${block.time}</div>
+      <div>
+        <span class="block-type-badge" style="color:${tc.color};background:${tc.bg};border-color:${tc.color}40">${tc.label}</span>
+        <div class="block-activity">${block.activity}</div>
+      </div>
+      <div>
+        <div class="block-detail">${block.detail}</div>
+        ${linksHtml}
+      </div>`;
+    list.appendChild(card);
+  });
+
+  // Review
+  const reviewBody = document.getElementById('review-body');
+  reviewBody.classList.toggle('open', reviewOpen);
+  document.getElementById('review-chevron').textContent = reviewOpen ? '▲' : '▼';
+  document.getElementById('review-toggle').style.background = reviewOpen ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)';
+
+  const qContainer = document.getElementById('review-questions');
+  qContainer.innerHTML = '';
+  s.review.forEach((q, i) => {
+    const item = document.createElement('div');
+    item.className = 'review-item';
+    item.style.borderColor = s.color + '50';
+    item.innerHTML = `<div class="review-q-num">Q${i+1}</div><div class="review-q-text">${q}</div>`;
+    qContainer.appendChild(item);
+  });
+
+  const nextNum = s.number === 10 ? '1 (review)' : s.number + 1;
+  document.getElementById('review-tip').innerHTML =
+    `💡 <strong>Tip:</strong> If you can't answer a question fluently, go back and re-read that section before moving to Session ${nextNum}. Spaced retrieval is the fastest way to make knowledge stick.`;
+
+  // Footer nav
+  const prevBtn = document.getElementById('btn-prev');
+  const nextBtn = document.getElementById('btn-next');
+  prevBtn.disabled = activeSession === 0;
+  nextBtn.disabled = activeSession === 9;
+  if (activeSession < 9) {
+    nextBtn.style.background = s.color + '15';
+    nextBtn.style.borderColor = s.color + '40';
+    nextBtn.style.color = s.color;
+  } else {
+    nextBtn.style.background = 'transparent';
+    nextBtn.style.borderColor = 'rgba(255,255,255,0.1)';
+    nextBtn.style.color = '#333';
+  }
+
+  // Scroll main to top
+  document.getElementById('main').scrollTop = 0;
+}
+
+function render() {
+  buildSidebar();
+  updateProgress();
+  renderSession();
+}
+
+function toggleDone() {
+  const s = sessions[activeSession];
+  if (completedSessions.has(s.number)) completedSessions.delete(s.number);
+  else completedSessions.add(s.number);
+  render();
+}
+
+function toggleReview() {
+  reviewOpen = !reviewOpen;
+  renderSession();
+}
+
+function navigate(dir) {
+  const next = activeSession + dir;
+  if (next < 0 || next > 9) return;
+  activeSession = next;
+  reviewOpen = false;
+  render();
+}
+
+// Init
+render();
+</script>
+</body>
+</html>
